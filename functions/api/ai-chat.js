@@ -1,4 +1,4 @@
-import { isAdminAuthenticated, errorResponse, jsonResponse } from '../_middleware';
+import { isAdminAuthenticated, errorResponse, jsonResponse, checkRateLimit, getSessionToken } from '../_middleware';
 import { resolveWorkersAiModel } from '../lib/workers-ai-models';
 
 function getMessageContentText(content) {
@@ -178,12 +178,38 @@ function formatAiContent(content, responseFormat) {
     return content;
 }
 
+// Rate limit config
+const RATE_LIMIT_IP_MAX = 10; // max requests per IP per window
+const RATE_LIMIT_IP_WINDOW = 60; // seconds
+const RATE_LIMIT_SESSION_MAX = 200; // max requests per session per window
+const RATE_LIMIT_SESSION_WINDOW = 24 * 60 * 60; // seconds (1 day)
+const EXTERNAL_TIMEOUT_MS = 10000; // 10s timeout for external fetches
+
 export async function onRequestPost(context) {
     const { request, env } = context;
 
     // 1. 权限检查：必须是登录管理员
     if (!(await isAdminAuthenticated(request, env))) {
         return errorResponse('Unauthorized', 401);
+    }
+
+    // 1.5 Rate limiting (per-IP and per-session)
+    const ip = request.headers.get('CF-Connecting-IP') || request.headers.get('X-Forwarded-For') || 'unknown';
+    try {
+        const ipLimit = await checkRateLimit(env, `ai_ip_${ip}`, RATE_LIMIT_IP_MAX, RATE_LIMIT_IP_WINDOW);
+        if (!ipLimit.allowed) return errorResponse('Too many AI requests from this IP. Try again later.', 429);
+    } catch (e) {
+        console.error('AI IP rate limit check failed:', e);
+    }
+
+    const sessionToken = getSessionToken(request);
+    if (sessionToken) {
+        try {
+            const sessLimit = await checkRateLimit(env, `ai_session_${sessionToken}`, RATE_LIMIT_SESSION_MAX, RATE_LIMIT_SESSION_WINDOW);
+            if (!sessLimit.allowed) return errorResponse('AI usage quota exceeded for this session.', 429);
+        } catch (e) {
+            console.error('AI session rate limit check failed:', e);
+        }
     }
 
     try {
@@ -214,49 +240,64 @@ export async function onRequestPost(context) {
         // 3. 根据不同的服务商处理请求
         if (provider === 'workers-ai') {
             if (!env.AI) {
-                return errorResponse('Workers AI binding (env.AI) not found', 500);
+                // Graceful fallback for deployments without Workers AI
+                return errorResponse('Workers AI binding (env.AI) not configured', 503);
             }
             // Workers AI 优先使用后台保存的模型，环境变量作为部署级兜底。
             const workerModel = resolveWorkersAiModel(model, env.WORKERS_AI_MODEL);
-            const response = await env.AI.run(workerModel, { messages });
-            const content = formatAiContent(extractWorkersAiText(response), responseFormat);
-            if (!content) {
-                return errorResponse('Workers AI response did not include generated content', 500);
+            try {
+                const response = await env.AI.run(workerModel, { messages });
+                const content = formatAiContent(extractWorkersAiText(response), responseFormat);
+                if (!content) {
+                    return errorResponse('Workers AI response did not include generated content', 500);
+                }
+                return jsonResponse({ code: 200, data: content });
+            } catch (e) {
+                console.error('Workers AI call failed:', e);
+                return errorResponse('Workers AI call failed', 502);
             }
-            return jsonResponse({
-                code: 200,
-                data: content
-            });
 
         } else if (provider === 'openai') {
             if (!apiKey) return errorResponse('OpenAI API Key 未在设置中配置', 500);
             if (!baseUrl) return errorResponse('OpenAI Base URL 未在设置中配置', 500);
 
             const openaiUrl = `${baseUrl.replace(/\/+$/, '')}/v1/chat/completions`;
-            const aiResponse = await fetch(openaiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`
-                },
-                body: JSON.stringify({
-                    model: model || 'gpt-3.5-turbo',
-                    messages: messages,
-                    temperature: 0.7
-                })
-            });
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), EXTERNAL_TIMEOUT_MS);
+            try {
+                const aiResponse = await fetch(openaiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: model || 'gpt-3.5-turbo',
+                        messages: messages,
+                        temperature: 0.7
+                    }),
+                    signal: controller.signal
+                });
 
-            if (!aiResponse.ok) {
-                const errText = await aiResponse.text();
-                return errorResponse(`OpenAI API Error: ${errText}`, 500);
+                clearTimeout(timeout);
+
+                if (!aiResponse.ok) {
+                    const errText = await aiResponse.text();
+                    return errorResponse(`OpenAI API Error: ${errText}`, 500);
+                }
+
+                const data = await aiResponse.json();
+                const content = formatAiContent(data.choices?.[0]?.message?.content || '', responseFormat);
+                return jsonResponse({ code: 200, data: content });
+            } catch (e) {
+                clearTimeout(timeout);
+                if (e.name === 'AbortError') {
+                    console.error('OpenAI request timed out');
+                    return errorResponse('OpenAI request timed out', 504);
+                }
+                console.error('OpenAI request failed:', e);
+                return errorResponse('OpenAI request failed', 502);
             }
-
-            const data = await aiResponse.json();
-            const content = formatAiContent(data.choices?.[0]?.message?.content || '', responseFormat);
-            return jsonResponse({
-                code: 200,
-                data: content
-            });
 
         } else if (provider === 'gemini') {
             if (!apiKey) return errorResponse('Gemini API Key 未在设置中配置', 500);
@@ -283,24 +324,36 @@ export async function onRequestPost(context) {
                 payload.systemInstruction = { parts: [{ text: systemMsg.content }] };
             }
 
-            const aiResponse = await fetch(geminiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
-                body: JSON.stringify(payload)
-            });
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), EXTERNAL_TIMEOUT_MS);
+            try {
+                const aiResponse = await fetch(geminiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+                    body: JSON.stringify(payload),
+                    signal: controller.signal
+                });
 
-            if (!aiResponse.ok) {
-                const errText = await aiResponse.text();
-                return errorResponse(`Gemini API Error: ${errText}`, 500);
+                clearTimeout(timeout);
+
+                if (!aiResponse.ok) {
+                    const errText = await aiResponse.text();
+                    return errorResponse(`Gemini API Error: ${errText}`, 500);
+                }
+
+                const data = await aiResponse.json();
+                const content = formatAiContent(data.candidates?.[0]?.content?.parts?.[0]?.text || '', responseFormat);
+
+                return jsonResponse({ code: 200, data: content });
+            } catch (e) {
+                clearTimeout(timeout);
+                if (e.name === 'AbortError') {
+                    console.error('Gemini request timed out');
+                    return errorResponse('Gemini request timed out', 504);
+                }
+                console.error('Gemini request failed:', e);
+                return errorResponse('Gemini request failed', 502);
             }
-
-            const data = await aiResponse.json();
-            const content = formatAiContent(data.candidates?.[0]?.content?.parts?.[0]?.text || '', responseFormat);
-
-            return jsonResponse({
-                code: 200,
-                data: content
-            });
 
         } else {
             return errorResponse(`Unsupported provider: ${provider}`, 400);
