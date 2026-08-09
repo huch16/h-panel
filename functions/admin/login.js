@@ -1,5 +1,6 @@
 // functions/admin/login.js
 
+import bcrypt from 'bcryptjs';
 import { timingSafeEqual, checkLoginRateLimit, recordLoginFailure, clearLoginFailures, buildSessionCookie } from '../_middleware';
 import { getTurnstileConfig, verifyTurnstileToken } from '../lib/turnstile';
 
@@ -177,8 +178,36 @@ export async function onRequestPost(context) {
       return renderLoginPage('系统配置错误，请联系管理员', env);
     }
 
-    // 使用恒定时间比较，防止时序攻击
-    const isValid = timingSafeEqual(name, storedUsername) && timingSafeEqual(password, storedPassword);
+    // 密码支持两种存储：bcrypt 哈希或历史明文。
+    let passwordMatch = false;
+    try {
+      if (typeof storedPassword === 'string' && /^\$2[aby]\$/.test(storedPassword)) {
+        // bcrypt hash
+        passwordMatch = await bcrypt.compare(password, storedPassword);
+      } else {
+        // 兼容历史明文，使用恒定时间比较
+        passwordMatch = timingSafeEqual(password, storedPassword);
+        // 若匹配成功，升级到 bcrypt 哈希以提升安全性
+        if (passwordMatch) {
+          try {
+            const saltRounds = 10;
+            const newHash = bcrypt.hashSync(password, saltRounds);
+            await env.NAV_AUTH.put('admin_password', newHash);
+          } catch (e) {
+            // 不阻塞登录，仅记录警告
+            console.warn('Failed to upgrade admin password to bcrypt hash:', e);
+          }
+        }
+      }
+    } catch (e) {
+      console.error('Password verification error:', e);
+      passwordMatch = false;
+    }
+
+    // 用户名使用恒定时间比较
+    const usernameMatch = timingSafeEqual(name, storedUsername);
+
+    const isValid = usernameMatch && passwordMatch;
 
     if (isValid) {
       // 登录成功：清除失败计数

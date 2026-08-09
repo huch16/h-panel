@@ -302,7 +302,7 @@ export async function onRequest(context) {
   const url = new URL(request.url);
 
   // Schema 迁移：首页 GET 留给 index.js 里与 KV/DB 读并行执行，避免在 HIT 路径上多一次串行 KV；
-  // 其余路径（所有写操作、管理 API、admin 页面等）保留串行 await 以保证 DDL 就绪。
+  // 其余路径（所有写操作、管理 API、admin 页面等��保留串行 await 以保证 DDL 就绪。
   if (env.NAV_DB) {
     const isHomePageGet = method === 'GET' && url.pathname === '/' && !url.search;
     if (!isHomePageGet) {
@@ -326,5 +326,37 @@ export async function onRequest(context) {
     }
   }
 
-  return context.next();
+  // 调用下游处理并在返回时添加安全响应头
+  const response = await context.next();
+  try {
+    const newHeaders = new Headers(response.headers);
+
+    const securityHeaders = {
+      'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
+      'X-Frame-Options': 'DENY',
+      'X-Content-Type-Options': 'nosniff',
+      'Referrer-Policy': 'strict-origin-when-cross-origin',
+      'Permissions-Policy': 'interest-cohort=()',
+      'X-XSS-Protection': '0'
+    };
+
+    // A conservative CSP that allows the site's own scripts/styles and Turnstile
+    if (!newHeaders.has('Content-Security-Policy')) {
+      newHeaders.set('Content-Security-Policy', "default-src 'self'; img-src * data:; script-src 'self' https://challenges.cloudflare.com 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;");
+    }
+
+    for (const [k, v] of Object.entries(securityHeaders)) {
+      if (!newHeaders.has(k)) newHeaders.set(k, v);
+    }
+
+    return new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: newHeaders
+    });
+  } catch (e) {
+    // 如果处理安全头失败，则返回原始响应以避免中断请求
+    console.error('Failed to set security headers:', e);
+    return response;
+  }
 }
