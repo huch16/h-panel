@@ -2019,3 +2019,26 @@ html:not(.dark) .dropdown-item.active {
     margin-bottom: 0;
   }
 }
+
+
+/* ===== 可视化编辑模式 ===== */
+.home-edit-mode .site-card {
+  cursor: grab;
+  border-style: dashed !important;
+  border-width: 2px !important;
+  border-color: rgba(59, 130, 246, 0.55) !important;
+}
+
+.home-edit-mode .site-card.home-dragging {
+  opacity: 0.4;
+}
+
+.home-edit-mode .site-card[draggable="true"]:active {
+  cursor: grabbing;
+}
+
+.home-edit-mode a[data-id] {
+  outline: 1px dashed rgba(59, 130, 246, 0.35);
+  outline-offset: 2px;
+  cursor: context-menu;
+}

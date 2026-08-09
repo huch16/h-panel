@@ -318,6 +318,9 @@
       init,
       renderSites,
       getSitesForCatalog,
+      getActiveCatalogId() {
+        return activeRenderedCatalogId;
+      },
       setActiveCatalogId(catalogId) {
         activeRenderedCatalogId = catalogId ? String(catalogId) : null;
       },

@@ -1,5 +1,5 @@
 // functions/index.js
-import { isAdminAuthenticated, getHomeCacheKey, clearHomeCacheDirty, markHomeCacheDirty, getHomeCacheDirtyValue } from './_middleware';
+import { isAdminAuthenticated, getSessionToken, getHomeCacheKey, clearHomeCacheDirty, markHomeCacheDirty, getHomeCacheDirtyValue } from './_middleware';
 import { FONT_MAP, HOME_CACHE_TTL } from './constants';
 import { escapeHTML, sanitizeUrl, normalizeSortOrder, getStyleStr, sanitizeStyleColor } from './lib/utils';
 import { getSettingsKeys, parseSettings } from './lib/settings-parser';
@@ -40,6 +40,29 @@ function normalizeCssPixelValue(value, fallback) {
   const normalized = String(value ?? '').trim().replace(/[^0-9]/g, '');
   if (normalized === '') return String(fallback);
   return normalized;
+}
+
+// 首页管理员态注入：已登录管理员需要在首页启用可视化编辑（拖拽/右键编辑）。
+// CSRF token 属于会话级密钥，不能写进共享的 KV 首页缓存（多会话共用同一份缓存），
+// 因此模板保留 <!--ADMIN_META--> 占位符，每次响应时按当前会话动态替换。
+async function injectAdminMeta(html, request, env) {
+  let meta = '<meta name="admin-authenticated" content="false">';
+
+  if (await isAdminAuthenticated(request, env)) {
+    const sessionToken = getSessionToken(request);
+    let csrf = '';
+    if (sessionToken) {
+      try {
+        csrf = (await env.NAV_AUTH.get(`csrf_${sessionToken}`)) || '';
+      } catch (e) {
+        console.warn('Failed to read CSRF token for admin meta:', e);
+      }
+    }
+    meta = '<meta name="admin-authenticated" content="true">';
+    if (csrf) meta += `<meta name="csrf-token" content="${csrf}">`;
+  }
+
+  return html.split('<!--ADMIN_META-->').join(meta);
 }
 
 export async function onRequest(context) {
@@ -88,7 +111,8 @@ export async function onRequest(context) {
     cacheDirty = !!cacheDirtyValue;
 
     if (!cacheDirty && cachedHtml) {
-      const response = new Response(cachedHtml, {
+      const finalHtml = await injectAdminMeta(cachedHtml, request, env);
+      const response = new Response(finalHtml, {
         headers: {
           'Content-Type': 'text/html; charset=utf-8',
           'Cache-Control': isAuthenticated ? 'private, no-store, max-age=0' : 'public, max-age=0, must-revalidate',
@@ -266,8 +290,8 @@ export async function onRequest(context) {
   const headingActiveAttr = catalogExists ? escapeHTML(currentCatalogName) : '';
   const submissionEnabled = String(env.ENABLE_PUBLIC_SUBMISSION) === 'true';
   const submissionClass = submissionEnabled ? '' : '!hidden';
-  const siteName = S.home_site_name || env.SITE_NAME || '灰色轨迹';
-  const siteDescription = S.home_site_description || env.SITE_DESCRIPTION || '一个优雅、快速、易于部署的书签（网址）收藏与分享平台，完全基于 Cloudflare 全家桶构建';
+  const siteName = S.home_site_name || env.SITE_NAME || '湖海的自由天空';
+  const siteDescription = S.home_site_description || env.SITE_DESCRIPTION || '有轨电车旁的苦菊';
   const footerText = S.home_footer_text || env.FOOTER_TEXT || '曾梦想仗剑走天涯';
   const titleStyle = getStyleStr(S.home_title_size, S.home_title_color, S.home_title_font);
   const subtitleStyle = getStyleStr(S.home_subtitle_size, S.home_subtitle_color, S.home_subtitle_font);
@@ -590,8 +614,11 @@ export async function onRequest(context) {
   // 压缩标签间空白，减小 HTML 体积（项目无 <pre>/<textarea>，安全）
   html = html.replace(/>\s+</g, '><');
 
+  // 首页管理员态动态注入（模板保留 <!--ADMIN_META--> 占位符，缓存内不含会话密钥）
+  const finalHtml = await injectAdminMeta(html, request, env);
+
   // === 17. 返回响应 ===
-  const response = new Response(html, {
+  const response = new Response(finalHtml, {
     headers: {
       'Content-Type': 'text/html; charset=utf-8',
       'Cache-Control': isAuthenticated ? 'private, no-store, max-age=0' : 'public, max-age=0, must-revalidate',

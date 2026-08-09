@@ -65,9 +65,9 @@ export function renderSiteCards(sites, settings) {
  * @returns {string}
  */
 export function renderEmptyState(categoryCount, hideAdmin) {
-  const emptyStateText = categoryCount === 0 ? '欢迎使用 iori-nav' : '暂无书签';
+  const emptyStateText = '暂无书签';
   const emptyStateSub = categoryCount === 0
-    ? '项目初始化完成，请前往后台添加分类和书签。'
+    ? '快去添加第一个分类和书签吧。'
     : '该分类下还没有添加任何书签。';
 
   return `

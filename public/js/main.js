@@ -12,6 +12,7 @@
     Home.initSubmission?.();
     Home.initSearch?.();
     Home.initCategoryNavigation?.();
+    Home.initEditMode?.();
 
     requestAnimationFrame(() => {
       document.body.classList.add('app-ready');

@@ -6,16 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>书签管理页面</title>
   <link rel="icon" href="/favicon.svg?v=148aafdf" type="image/svg+xml">
-  <link rel="stylesheet" href="/css/admin-layout.css?v=42e6c65a" />
-  <link rel="stylesheet" href="/css/admin-forms.css?v=70b67305" />
-  <link rel="stylesheet" href="/css/admin-card-options.css?v=55b9995c" />
-  <link rel="stylesheet" href="/css/admin-preview-shell.css?v=82413550" />
-  <link rel="stylesheet" href="/css/admin-preview-controls.css?v=7fa6812c" />
-  <link rel="stylesheet" href="/css/admin-preview-cards.css?v=d0d0a9b0" />
-  <link rel="stylesheet" href="/css/admin-settings-modal.css?v=5fe5060a" />
-  <link rel="stylesheet" href="/css/admin-card-preview.css?v=a42c3dea" />
-  <link rel="stylesheet" href="/css/admin-feedback.css?v=15b4dada" />
-  <link rel="stylesheet" href="/css/admin-dropdown.css?v=9efddb85" />
+  <link rel="stylesheet" href="/css/admin-layout.css?v=768f9ade" />
+  <link rel="stylesheet" href="/css/admin-forms.css?v=4b439f93" />
+  <link rel="stylesheet" href="/css/admin-card-options.css?v=32c2dfc2" />
+  <link rel="stylesheet" href="/css/admin-preview-shell.css?v=dd018be2" />
+  <link rel="stylesheet" href="/css/admin-preview-controls.css?v=2fbbc84e" />
+  <link rel="stylesheet" href="/css/admin-preview-cards.css?v=ec41ebfe" />
+  <link rel="stylesheet" href="/css/admin-settings-modal.css?v=6a2e5a16" />
+  <link rel="stylesheet" href="/css/admin-card-preview.css?v=0d44f94c" />
+  <link rel="stylesheet" href="/css/admin-feedback.css?v=7f73bd85" />
+  <link rel="stylesheet" href="/css/admin-dropdown.css?v=a8270a59" />
   <link rel="stylesheet" href="/css/tailwind.min.css?v=79714d4b">
 </head>
 
@@ -441,7 +441,7 @@
           <div class="settings-preview-header">
             <div>
               <div class="settings-preview-kicker">首页预览</div>
-              <h3 id="livePreviewPanelTitle">灰色轨迹</h3>
+              <h3 id="livePreviewPanelTitle">湖海的自由天空</h3>
             </div>
             <div class="settings-preview-device-tabs" role="group" aria-label="预览尺寸">
               <button type="button" class="preview-device-btn active" data-preview-device="desktop">桌面</button>
@@ -486,7 +486,7 @@
                     </span>
                   </div>
                   <div class="live-preview-title-block">
-                    <h1 data-preview-role="siteTitle">灰色轨迹</h1>
+                    <h1 data-preview-role="siteTitle">湖海的自由天空</h1>
                     <p data-preview-role="siteDescription">一个优雅、快速、易于部署的书签收藏与分享平台</p>
                   </div>
                   <div class="live-search-engines" data-preview-role="searchEngines">
@@ -514,24 +514,6 @@
                 </section>
 
                 <section class="live-card-grid" data-preview-role="cardGrid"></section>
-
-                <footer class="live-preview-footer" data-preview-role="footer">
-                  <div class="live-preview-footer-inner">
-                    <span class="live-preview-footer-link">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" aria-hidden="true">
-                        <path
-                          d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4">
-                        </path>
-                        <path d="M9 18c-4.51 2-5-2-7-2"></path>
-                      </svg>
-                      <span>Github</span>
-                    </span>
-                    <span class="live-preview-footer-separator">|</span>
-                    <p>© <span data-preview-role="footerYear">2026</span> <span data-preview-role="footerText">曾梦想仗剑走天涯</span></p>
-                  </div>
-                </footer>
               </main>
             </div>
           </div>
@@ -1431,7 +1413,7 @@
               </button>
               <span id="categoryBreadcrumb" class="text-gray-700 font-medium ml-2"></span>
               <p class="category-hint text-gray-500 text-sm ml-2 hidden sm:block">
-                拖动卡片可调整排序
+                树形总览 · 同级卡片可拖动排序
               </p>
             </div>
           </div>
@@ -1572,31 +1554,31 @@
     </div>
   </div>
 
-  <script src="/js/admin-shared.js?v=bb97f086"></script>
-  <script src="/js/admin-cache.js?v=7b8faa7b"></script>
-  <script src="/js/admin-bookmark-list.js?v=d6db3383"></script>
-  <script src="/js/admin-pending.js?v=2482c2ea"></script>
-  <script src="/js/admin-tabs.js?v=fd9a0d73"></script>
-  <script src="/js/admin-bookmark-privacy.js?v=306f5fdb"></script>
-  <script src="/js/admin.js?v=39f7ce60"></script>
-  <script src="/js/admin-categories.js?v=aa436f47"></script>
-  <script src="/js/admin-bookmarks.js?v=050f96b1"></script>
-  <script src="/js/admin-batch.js?v=30d922a5"></script>
-  <script src="/js/wallpaper-defaults.js?v=b65f42d1"></script>
-  <script src="/js/admin-settings-defaults.js?v=309e396c"></script>
-  <script src="/js/admin-settings-form.js?v=e48d6596"></script>
-  <script src="/js/admin-settings-core.js?v=7c31f3ce"></script>
-  <script src="/js/admin-settings-preview-shared.js?v=3d0c2bf4"></script>
-  <script src="/js/admin-settings-preview-data.js?v=3eddb596"></script>
-  <script src="/js/admin-settings-preview-nav.js?v=7d9c14b8"></script>
-  <script src="/js/admin-settings-preview-animation.js?v=caa22fec"></script>
-  <script src="/js/admin-settings-preview-render.js?v=cd40b868"></script>
-  <script src="/js/admin-settings-preview-controls.js?v=b32cd231"></script>
-  <script src="/js/admin-settings-preview.js?v=909bf2a1"></script>
-  <script src="/js/admin-settings-wallpaper.js?v=948f7d65"></script>
-  <script src="/js/admin-settings-ai.js?v=0d8c0558"></script>
-  <script src="/js/admin-settings.js?v=3d60c17b"></script>
-  <script src="/js/admin-import-export.js?v=0ee9e0b0"></script>
+  <script src="/js/admin-shared.js?v=a337b552"></script>
+  <script src="/js/admin-cache.js?v=ae06819c"></script>
+  <script src="/js/admin-bookmark-list.js?v=bbdffc2f"></script>
+  <script src="/js/admin-pending.js?v=b6ae86b9"></script>
+  <script src="/js/admin-tabs.js?v=3fe16a46"></script>
+  <script src="/js/admin-bookmark-privacy.js?v=cb0fbe1c"></script>
+  <script src="/js/admin.js?v=99dc278e"></script>
+  <script src="/js/admin-categories.js?v=f068beb6"></script>
+  <script src="/js/admin-bookmarks.js?v=2c52bc54"></script>
+  <script src="/js/admin-batch.js?v=231f596e"></script>
+  <script src="/js/wallpaper-defaults.js?v=7eebee6d"></script>
+  <script src="/js/admin-settings-defaults.js?v=ad941375"></script>
+  <script src="/js/admin-settings-form.js?v=abf715c1"></script>
+  <script src="/js/admin-settings-core.js?v=88c39833"></script>
+  <script src="/js/admin-settings-preview-shared.js?v=f036607b"></script>
+  <script src="/js/admin-settings-preview-data.js?v=649b33cc"></script>
+  <script src="/js/admin-settings-preview-nav.js?v=fbb14886"></script>
+  <script src="/js/admin-settings-preview-animation.js?v=f69111b6"></script>
+  <script src="/js/admin-settings-preview-render.js?v=c85fad91"></script>
+  <script src="/js/admin-settings-preview-controls.js?v=f24b2876"></script>
+  <script src="/js/admin-settings-preview.js?v=20153112"></script>
+  <script src="/js/admin-settings-wallpaper.js?v=e7168e1d"></script>
+  <script src="/js/admin-settings-ai.js?v=cc131031"></script>
+  <script src="/js/admin-settings.js?v=29f90d46"></script>
+  <script src="/js/admin-import-export.js?v=15b447db"></script>
 </body>
 
 </html>

@@ -5,6 +5,12 @@ Thumbs.db
 node_modules/
 .wrangler/
 wrangler.toml
+wrangler.worker-backup.toml
+
+# Build artifacts
+_worker.bundle
+dist-check/
+dist-functions/
 
 # Husky internal files
 .husky/_
