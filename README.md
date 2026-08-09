@@ -217,6 +217,5 @@ D1（本地 / 远程）：
 ## 📞 联系方式
 
 - 项目源作者 / 参考仓库：[jy02739244/iori-nav](https://github.com/jy02739244/iori-nav)  
-- 本仓库维护者：[@灰色轨迹](https://github.com/jy02739244)
 
 <p align="center">如果你喜欢这个项目，请给它一个 ⭐️！</p>
