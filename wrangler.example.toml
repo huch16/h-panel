@@ -39,6 +39,6 @@ TURNSTILE_SITE_KEY = ""
 TURNSTILE_SECRET_KEY = ""
 
 # Optional: enable if you bind Cloudflare Workers AI for description generation.
-# [ai]
-# binding = "AI"
-# remote = false
+[ai]
+binding = "AI"
+remote = false

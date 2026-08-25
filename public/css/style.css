@@ -2021,7 +2021,7 @@ html:not(.dark) .dropdown-item.active {
 }
 
 
-/* ===== 可视化编辑模式 ===== */
+/* ===== 锟斤拷锟接伙拷锟洁辑模式 ===== */
 .home-edit-mode .site-card {
   cursor: grab;
   border-style: dashed !important;
@@ -2041,4 +2041,20 @@ html:not(.dark) .dropdown-item.active {
   outline: 1px dashed rgba(59, 130, 246, 0.35);
   outline-offset: 2px;
   cursor: context-menu;
+}
+
+/* ===== 鍗＄墖缇庡寲 ===== */
+.site-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.site-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+.site-card .icon-wrapper i {
+  font-size: 1.2rem;
+  color: var(--accent-color, #e94560);
+}
+.dark .site-card:hover {
+  box-shadow: 0 6px 16px rgba(255,255,255,0.08);
 }
