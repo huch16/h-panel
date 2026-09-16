@@ -80,6 +80,39 @@ export async function onRequestPut(context) {
     const iconAPI = env.ICON_API || 'https://faviconsnap.com/api/favicon?url=';
     sanitizedLogo = buildFaviconUrl(sanitizedUrl, sanitizedLogo, iconAPI);
 
+    // 🔶 若仍未获取到 logo 且 Workers AI 可用，则自动生成
+    if (!sanitizedLogo && env.AI) {
+      try {
+        const aiResp = await env.AI.run('@cf/stabilityai/stable-diffusion-xl-base-1.0', {
+          prompt: `A clean, modern, flat‑design icon or logo for a website titled "${sanitizedName}". ${sanitizedDesc ? 'Theme: ' + sanitizedDesc + '.' : ''} The icon should be simple, instantly recognizable, suitable for a 64×64 size, vibrant colors, no text, no background clutter, vector‑like style.`,
+          height: 256,
+          width: 256,
+          num_steps: 20,
+          guidance_scale: 7.5,
+        });
+        let b64;
+        if (aiResp instanceof ArrayBuffer) {
+          const bytes = new Uint8Array(aiResp);
+          let bin = '';
+          for (let i = 0; i < bytes.byteLength; i++) bin += String.fromCharCode(bytes[i]);
+          b64 = btoa(bin);
+        } else if (typeof aiResp === 'string') {
+          b64 = aiResp;
+        } else if (aiResp?.image) {
+          b64 = aiResp.image;
+        } else if (aiResp?.result?.image) {
+          b64 = aiResp.result.image;
+        }
+        if (b64 && b64.startsWith('data:')) {
+          const m = b64.match(/base64,(.*)$/);
+          b64 = m ? m[1] : b64;
+        }
+        if (b64) sanitizedLogo = `data:image/png;base64,${b64}`;
+      } catch (e) {
+        console.log('AUTO_ICON_GEN_FAIL', e.message);
+      }
+    }
+
     // Fetch category name
     const categoryResult = await env.NAV_DB.prepare('SELECT catelog, is_private FROM category WHERE id = ?').bind(catelog_id).first();
     if (!categoryResult) {

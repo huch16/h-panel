@@ -266,6 +266,38 @@
     refs.reviewPendingAiBtn?.addEventListener('click', () => {
       handleSingleGenerate('reviewPendingName', 'reviewPendingUrl', 'reviewPendingDesc', 'reviewPendingAiBtn');
     });
+
+    // 🔶 AI 生成图标（Logo）按钮
+    const aiIconBtn = document.getElementById('editBookmarkAiIconBtn');
+    if (aiIconBtn) {
+      aiIconBtn.addEventListener('click', async () => {
+        const title = document.getElementById('editBookmarkName')?.value.trim() || '';
+        const url   = document.getElementById('editBookmarkUrl')?.value.trim() || '';
+        const desc  = document.getElementById('editBookmarkDesc')?.value.trim() || '';
+        if (!title) { alert('请先填写名称'); return; }
+        aiIconBtn.disabled = true;
+        aiIconBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+        try {
+          const resp = await fetch('/api/ai/generate-icon', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, url, desc }),
+          });
+          if (!resp.ok) throw new Error('AI ' + resp.status);
+          const data = await resp.json();
+          if (data.logo) {
+            document.getElementById('editBookmarkLogo').value = data.logo;
+            const preview = document.getElementById('editBookmarkLogoPreview');
+            if (preview) { preview.src = data.logo; preview.style.display = 'block'; }
+          }
+        } catch (e) {
+          alert('图标生成失败：' + e.message);
+        } finally {
+          aiIconBtn.disabled = false;
+          aiIconBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i>';
+        }
+      });
+    }
   }
 
   function init() {

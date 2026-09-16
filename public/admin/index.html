@@ -17,6 +17,8 @@
   <link rel="stylesheet" href="/css/admin-feedback.css?v=7f73bd85" />
   <link rel="stylesheet" href="/css/admin-dropdown.css?v=a8270a59" />
   <link rel="stylesheet" href="/css/tailwind.min.css?v=79714d4b">
+  <!-- Font Awesome 6 (图标库) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
 </head>
 
 <body>
@@ -38,6 +40,7 @@
       </div>
       <div class="header-actions">
         <button id="refreshCacheBtn" class="refresh-btn" title="手动刷新首页缓存">
+          <i class="fa-solid fa-rotate mr-1"></i>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"
             stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -60,27 +63,31 @@
       ></div>
       <input type="file" id="importFile" accept=".json,.html,.htm" style="display: none" />
       <div class="flex flex-wrap gap-2 items-center">
-        <button id="batchBtn"
+        <button id="batchBtn" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors shadow-sm font-medium text-sm h-[42px] whitespace-nowrap"><i class="fa-solid fa-list-check mr-1"></i>批量管理</button>
           class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors shadow-sm font-medium text-sm h-[42px] whitespace-nowrap">批量管理</button>
-        <button id="importBtn"
+        <button id="importBtn" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm font-medium text-sm h-[42px] whitespace-nowrap"><i class="fa-solid fa-file-import mr-1"></i>导入</button>
           class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm font-medium text-sm h-[42px] whitespace-nowrap">导入</button>
-        <button id="exportBtn"
+        <button id="exportBtn" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm font-medium text-sm h-[42px] whitespace-nowrap"><i class="fa-solid fa-file-export mr-1"></i>导出</button>
           class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm font-medium text-sm h-[42px] whitespace-nowrap">导出</button>
-        <button id="addCategoryBtn"
+        <button id="addCategoryBtn" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors shadow-sm font-medium text-sm flex items-center gap-1 h-[42px] whitespace-nowrap">
+          <i class="fa-solid fa-folder-plus mr-1"></i>新增分类
+        </button>
           class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors shadow-sm font-medium text-sm flex items-center gap-1 h-[42px] whitespace-nowrap">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
           </svg>
           新增分类
         </button>
-        <button id="addBookmarkBtn"
+        <button id="addBookmarkBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors shadow-sm font-medium text-sm flex items-center gap-1 h-[42px] whitespace-nowrap">
+          <i class="fa-solid fa-bookmark mr-1"></i>新增书签
+        </button>
           class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors shadow-sm font-medium text-sm flex items-center gap-1 h-[42px] whitespace-nowrap">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
           </svg>
           新增书签
         </button>
-        <button id="settingsBtn"
+        <button id="settingsBtn" class="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900 transition-colors shadow-sm font-medium text-sm h-[42px] whitespace-nowrap"><i class="fa-solid fa-gear mr-1"></i>设置</button>
           class="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900 transition-colors shadow-sm font-medium text-sm h-[42px] whitespace-nowrap">设置</button>
       </div>
     </div>
@@ -333,7 +340,13 @@
           </div>
           <div class="form-group">
             <label for="editBookmarkLogo">Logo(可选):</label>
-            <input type="text" name="logo" id="editBookmarkLogo" placeholder="默认自动根据url获取" />
+            <div style="display:flex;gap:6px;align-items:center;">
+              <input type="text" name="logo" id="editBookmarkLogo" placeholder="默认自动根据url获取" style="flex:1;" />
+              <button type="button" id="editBookmarkAiIconBtn" class="ai-generate-btn" title="AI 生成图标">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+              </button>
+            </div>
+            <img id="editBookmarkLogoPreview" src="" alt="" style="max-width:64px;max-height:64px;display:none;margin-top:6px;border-radius:6px;" />
           </div>
           <div class="form-group">
             <label for="editBookmarkDesc">描述(可选):</label>
