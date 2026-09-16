@@ -44,10 +44,26 @@ export async function onRequestPost(context) {
       guidance_scale: 7.5,
     });
 
-    // Result may be ArrayBuffer, string, or { image: base64 }
+    // 调试日志：记录返回类型
+    console.log('AI_RESULT_TYPE', typeof result, result && (result.constructor?.name || Object.keys(result)));
+    if (result instanceof ArrayBuffer) {
+      console.log('AI_RESULT_AB_LENGTH', result.byteLength);
+    }
+
+    // Result may be ArrayBuffer, Uint8Array, Blob, string, or { image: base64 }
     let base64;
     if (result instanceof ArrayBuffer) {
       const bytes = new Uint8Array(result);
+      let binary = '';
+      for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
+      base64 = btoa(binary);
+    } else if (result instanceof Uint8Array) {
+      let binary = '';
+      for (let i = 0; i < result.byteLength; i++) binary += String.fromCharCode(result[i]);
+      base64 = btoa(binary);
+    } else if (typeof Blob !== 'undefined' && result instanceof Blob) {
+      const buf = await result.arrayBuffer();
+      const bytes = new Uint8Array(buf);
       let binary = '';
       for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
       base64 = btoa(binary);
