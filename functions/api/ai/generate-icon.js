@@ -1,4 +1,4 @@
-import { isAdminAuthenticated, errorResponse, jsonResponse } from '../_middleware.js';
+import { isAdminAuthenticated, errorResponse, jsonResponse } from '../_middleware';
 
 /**
  * POST /api/ai/generate-icon
