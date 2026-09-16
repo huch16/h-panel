@@ -4,7 +4,7 @@ export const INPUT_LIMITS = {
   categoryName: 80,
   bookmarkName: 120,
   bookmarkUrl: 2048,
-  bookmarkLogo: 2048,
+  bookmarkLogo: 200000, // 允许保存 AI 生成的 data:image/png;base64,...（约 256×256 PNG）
   bookmarkDesc: 1000,
   importCategories: 2000,
   importSites: 10000,
