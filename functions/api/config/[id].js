@@ -96,6 +96,26 @@ export async function onRequestPut(context) {
           let bin = '';
           for (let i = 0; i < bytes.byteLength; i++) bin += String.fromCharCode(bytes[i]);
           b64 = btoa(bin);
+        } else if (aiResp instanceof Uint8Array) {
+          let bin = '';
+          for (let i = 0; i < aiResp.byteLength; i++) bin += String.fromCharCode(aiResp[i]);
+          b64 = btoa(bin);
+        } else if (typeof ReadableStream !== 'undefined' && aiResp instanceof ReadableStream) {
+          const reader = aiResp.getReader();
+          const chunks = [];
+          let total = 0;
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            chunks.push(value);
+            total += value.byteLength;
+          }
+          const bytes = new Uint8Array(total);
+          let offset = 0;
+          for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
+          let bin = '';
+          for (let i = 0; i < bytes.byteLength; i++) bin += String.fromCharCode(bytes[i]);
+          b64 = btoa(bin);
         } else if (typeof aiResp === 'string') {
           b64 = aiResp;
         } else if (aiResp?.image) {

@@ -50,38 +50,54 @@ export async function onRequestPost(context) {
       console.log('AI_RESULT_AB_LENGTH', result.byteLength);
     }
 
-    // Result may be ArrayBuffer, Uint8Array, Blob, string, or { image: base64 }
-    let base64;
+    // Result may be ArrayBuffer, Uint8Array, Blob, ReadableStream, string, or { image: base64 }
+    let bytes;
     if (result instanceof ArrayBuffer) {
-      const bytes = new Uint8Array(result);
-      let binary = '';
-      for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
-      base64 = btoa(binary);
+      bytes = new Uint8Array(result);
     } else if (result instanceof Uint8Array) {
-      let binary = '';
-      for (let i = 0; i < result.byteLength; i++) binary += String.fromCharCode(result[i]);
-      base64 = btoa(binary);
+      bytes = result;
     } else if (typeof Blob !== 'undefined' && result instanceof Blob) {
-      const buf = await result.arrayBuffer();
-      const bytes = new Uint8Array(buf);
-      let binary = '';
-      for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
-      base64 = btoa(binary);
+      bytes = new Uint8Array(await result.arrayBuffer());
+    } else if (typeof ReadableStream !== 'undefined' && result instanceof ReadableStream) {
+      // Cloudflare Workers AI in Pages Functions returns a ReadableStream
+      const reader = result.getReader();
+      const chunks = [];
+      let total = 0;
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        chunks.push(value);
+        total += value.byteLength;
+      }
+      bytes = new Uint8Array(total);
+      let offset = 0;
+      for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
     } else if (typeof result === 'string') {
-      base64 = result;
+      // Assume base64 string
+      let s = result;
+      if (s.startsWith('data:')) {
+        const m = s.match(/base64,(.*)$/);
+        s = m ? m[1] : s;
+      }
+      return jsonResponse({ logo: `data:image/png;base64,${s}` });
     } else if (result?.image) {
-      base64 = result.image;
-    } else if (result?.result?.image) {
-      base64 = result.result.image;
+      let s = result.image;
+      if (s.startsWith('data:')) {
+        const m = s.match(/base64,(.*)$/);
+        s = m ? m[1] : s;
+      }
+      return jsonResponse({ logo: `data:image/png;base64,${s}` });
+    } else {
+      throw new Error('Unsupported AI response type: ' + (typeof result));
     }
 
-    if (!base64) throw new Error('AI did not return image data');
-
-    // Strip data URL prefix if present
-    if (base64.startsWith('data:')) {
-      const match = base64.match(/base64,(.*)$/);
-      base64 = match ? match[1] : base64;
+    // Convert Uint8Array to base64
+    let binary = '';
+    const chunkSize = 0x8000;
+    for (let i = 0; i < bytes.byteLength; i += chunkSize) {
+      binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize));
     }
+    const base64 = btoa(binary);
 
     return jsonResponse({ logo: `data:image/png;base64,${base64}` });
   } catch (e) {
