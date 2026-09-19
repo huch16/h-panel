@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="/css/admin-preview-controls.css?v=2fbbc84e" />
   <link rel="stylesheet" href="/css/admin-preview-cards.css?v=ec41ebfe" />
   <link rel="stylesheet" href="/css/admin-settings-modal.css?v=6a2e5a16" />
+  <link rel="stylesheet" href="/css/admin-settings-v2.css?v=1.0.0" />
   <link rel="stylesheet" href="/css/admin-card-preview.css?v=0d44f94c" />
   <link rel="stylesheet" href="/css/admin-feedback.css?v=7f73bd85" />
   <link rel="stylesheet" href="/css/admin-dropdown.css?v=a8270a59" />
@@ -64,31 +65,15 @@
       <input type="file" id="importFile" accept=".json,.html,.htm" style="display: none" />
       <div class="flex flex-wrap gap-2 items-center">
         <button id="batchBtn" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors shadow-sm font-medium text-sm h-[42px] whitespace-nowrap"><i class="fa-solid fa-list-check mr-1"></i>批量管理</button>
-          class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors shadow-sm font-medium text-sm h-[42px] whitespace-nowrap">批量管理</button>
         <button id="importBtn" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm font-medium text-sm h-[42px] whitespace-nowrap"><i class="fa-solid fa-file-import mr-1"></i>导入</button>
-          class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm font-medium text-sm h-[42px] whitespace-nowrap">导入</button>
         <button id="exportBtn" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm font-medium text-sm h-[42px] whitespace-nowrap"><i class="fa-solid fa-file-export mr-1"></i>导出</button>
-          class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm font-medium text-sm h-[42px] whitespace-nowrap">导出</button>
         <button id="addCategoryBtn" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors shadow-sm font-medium text-sm flex items-center gap-1 h-[42px] whitespace-nowrap">
           <i class="fa-solid fa-folder-plus mr-1"></i>新增分类
-        </button>
-          class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors shadow-sm font-medium text-sm flex items-center gap-1 h-[42px] whitespace-nowrap">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-          </svg>
-          新增分类
         </button>
         <button id="addBookmarkBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors shadow-sm font-medium text-sm flex items-center gap-1 h-[42px] whitespace-nowrap">
           <i class="fa-solid fa-bookmark mr-1"></i>新增书签
         </button>
-          class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors shadow-sm font-medium text-sm flex items-center gap-1 h-[42px] whitespace-nowrap">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-          </svg>
-          新增书签
-        </button>
         <button id="settingsBtn" class="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900 transition-colors shadow-sm font-medium text-sm h-[42px] whitespace-nowrap"><i class="fa-solid fa-gear mr-1"></i>设置</button>
-          class="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900 transition-colors shadow-sm font-medium text-sm h-[42px] whitespace-nowrap">设置</button>
       </div>
     </div>
 
@@ -534,11 +519,40 @@
 
         <div class="settings-panel-pane">
         <div class="modal-header">
-          <h3 class="modal-title"><span>⚙️</span> 系统设置</h3>
+          <h3 class="modal-title"><span>⚙️</span> 系统设置 <span class="settings-section-summary-tag recommended" style="margin-left:6px;font-size:0.6rem;">v2 优化版</span></h3>
           <button id="closeSettingsModal" class="modal-close-btn">×</button>
         </div>
 
         <div class="modal-body">
+          <!-- ===== 重构后的设置面板：预设 + 搜索 (v2) ===== -->
+          <div class="settings-toolbar-v2">
+            <div class="toolbar-row">
+              <span class="toolbar-label">一键预设</span>
+              <div id="settingsPresets" class="preset-btn-group"></div>
+            </div>
+            <div class="toolbar-row">
+              <div class="settings-search-wrap">
+                <i class="fa-solid fa-magnifying-glass settings-search-icon"></i>
+                <input
+                  type="search"
+                  id="settingsSearchInput"
+                  class="settings-search-input"
+                  placeholder="搜索设置项…  (例如: 壁纸、动画、字体、颜色)"
+                  autocomplete="off"
+                  aria-label="搜索设置项"
+                />
+                <button type="button" id="settingsSearchClear" class="settings-search-clear" title="清空 (Esc)">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+              <span class="settings-search-result" id="settingsSearchResult"></span>
+            </div>
+            <div class="settings-tip-banner">
+              <i class="fa-solid fa-circle-info"></i>
+              <span>高级排版（字体/颜色/大小）默认收起，可按需展开。点击预设可一键切换风格。</span>
+            </div>
+          </div>
+
           <div class="settings-tabs">
             <button class="settings-tab-btn active" data-tab="home-settings">首页设置</button>
             <button class="settings-tab-btn" data-tab="layout-settings">卡片设置</button>
@@ -1592,6 +1606,7 @@
   <script src="/js/admin-settings-ai.js?v=920af4fb"></script>
   <script src="/js/admin-settings.js?v=29f90d46"></script>
   <script src="/js/admin-import-export.js?v=15b447db"></script>
+  <script src="/js/admin-settings-v2.js?v=1.0.0"></script>
 </body>
 
 </html>
