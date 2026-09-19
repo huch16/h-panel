@@ -1,36 +1,63 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{SITE_NAME}} - 网址导航</title>
-  <meta name="description" content="{{SITE_DESCRIPTION}}">
-  <link rel="canonical" href="{{CANONICAL_URL}}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>湖海的自由天空 - 网址导航</title>
+  <meta name="description" content="有轨电车旁的苦菊">
+  <meta name="theme-color" content="#1e40af">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="/">
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="{{SITE_NAME}}">
-  <meta property="og:title" content="{{SITE_NAME}} - 网址导航">
-  <meta property="og:description" content="{{SITE_DESCRIPTION}}">
-  <meta property="og:url" content="{{CANONICAL_URL}}">
-  <meta property="og:image" content="{{OG_IMAGE_URL}}">
+  <meta property="og:site_name" content="湖海的自由天空">
+  <meta property="og:title" content="湖海的自由天空 - 网址导航">
+  <meta property="og:description" content="有轨电车旁的苦菊">
+  <meta property="og:url" content="/">
+  <meta property="og:image" content="/favicon.svg">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="{{SITE_NAME}} - 网址导航">
-  <meta name="twitter:description" content="{{SITE_DESCRIPTION}}">
-  <meta name="twitter:image" content="{{OG_IMAGE_URL}}">
+  <meta name="twitter:title" content="湖海的自由天空 - 网址导航">
+  <meta name="twitter:description" content="有轨电车旁的苦菊">
+  <meta name="twitter:image" content="/favicon.svg">
   <link rel="icon" href="/favicon.svg?v=148aafdf" type="image/svg+xml">
   <link rel="stylesheet" href="/css/style.css?v=4b2fc38b">
-  <!-- Font Awesome 6 (图标库) -->
+  <!-- Font Awesome 6 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
   <script>
     // Init Theme ASAP to prevent FOUC
-    if (localStorage.getItem('theme') === 'dark') {
-      document.documentElement.classList.add('dark');
-    }
+    (function () {
+      try {
+        if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+      } catch (e) {}
+    })();
   </script>
   <link rel="stylesheet" href="/css/tailwind.min.css?v=79714d4b">
-  <!--ADMIN_META-->
+  <style>
+    /* 骨架屏（home-render.js 加载前显示） */
+    html, body { margin: 0; padding: 0; }
+    body.home-loading #app-scroll { display: none; }
+    body { background-color: #fdf8f3; }
+    .home-skel { padding: 1.5rem; max-width: 1280px; margin: 0 auto; }
+    .home-skel-header { height: 180px; background: linear-gradient(110deg,#f3f4f6 30%,#e5e7eb 50%,#f3f4f6 70%); background-size:200% 100%; border-radius: 12px; margin-bottom: 1.5rem; animation: home-skel-pulse 1.4s ease-in-out infinite; }
+    .home-skel-stats { height: 32px; width: 60%; background: #f3f4f6; border-radius: 6px; margin: 1.5rem 0; animation: home-skel-pulse 1.4s ease-in-out infinite; }
+    .home-skel-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(260px,1fr)); gap: 1rem; }
+    .home-skel-card { display: flex; gap: 12px; padding: 16px; background: #fff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); animation: home-skel-pulse 1.4s ease-in-out infinite; }
+    .home-skel-logo { width: 40px; height: 40px; background: #f3f4f6; border-radius: 8px; flex-shrink: 0; }
+    .home-skel-line { background: #f3f4f6; border-radius: 4px; }
+    @keyframes home-skel-pulse { 0%,100%{opacity:1} 50%{opacity:0.55} }
+    @media (prefers-color-scheme: dark) {
+      .home-skel-header, .home-skel-stats, .home-skel-logo, .home-skel-line { background: #1f2937; }
+      .home-skel-card { background: #111827; }
+    }
+    /* 错误态 */
+    .home-error { padding: 4rem 1rem; text-align: center; color: #6b7280; }
+    .home-error i { font-size: 3rem; color: #dc2626; display: block; margin-bottom: 1rem; }
+    .home-error h2 { font-size: 1.25rem; font-weight: 600; margin: 0.5rem 0; color: #374151; }
+    .home-error button { margin-top: 1rem; padding: 8px 16px; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    .home-error button:hover { background: #1d4ed8; }
+  </style>
 </head>
-<body class="bg-secondary-50 font-sans text-gray-800">
-  <!-- SVG sprite: 高频复用图标在此定义一次，卡片等处通过 <use href="#icon-xxx"/> 引用 -->
+<body class="bg-secondary-50 dark:bg-gray-900 font-sans text-gray-800 dark:text-gray-100">
+  <!-- SVG sprite: 高频复用图标，页面各处通过 <use href="#icon-xxx"/> 引用 -->
   <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
     <symbol id="icon-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
       <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
@@ -45,165 +72,52 @@
       <path d="M9 5l7 7-7 7"/>
     </symbol>
   </svg>
-  <input type="checkbox" id="sidebar-toggle" class="hidden">
-  
-  <!-- 左上角操作区 (移动端导航按钮) -->
-  {{LEFT_TOP_ACTION}}
 
-  <!-- 右上角操作区 (主题切换, 后台入口) -->
-  {{RIGHT_TOP_ACTION}}
-  
-  <div id="mobileOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 mobile-overlay lg:hidden"></div>
-  
-  <!-- 桌面侧边栏开关按钮 -->
-  <div class="fixed top-4 left-4 z-50 hidden lg:block {{SIDEBAR_TOGGLE_CLASS}}">
-    <label for="sidebar-toggle" class="p-2 rounded-lg bg-white shadow-md hover:bg-gray-100 inline-block cursor-pointer">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
-    </label>
+  <input type="checkbox" id="sidebar-toggle" class="hidden">
+
+  <!-- 滚动容器包裹应用根：home-render.js 渲染内容到 #app，#app-scroll 提供滚动能力 -->
+  <div id="app-scroll">
+    <div id="app"></div>
   </div>
-  
-  <!-- 侧边栏 -->
-  <aside id="sidebar" class="sidebar fixed left-0 top-0 h-full w-64 bg-white dark:bg-gray-900 shadow-md border-r border-primary-100/60 dark:border-gray-800 z-50 overflow-y-auto mobile-sidebar lg:transform-none transition-all duration-300 {{SIDEBAR_CLASS}}">
-    <div class="p-6">
-      <div class="flex items-center justify-end mb-8">
-        <button id="closeSidebar" class="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 lg:hidden">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-        <label for="sidebar-toggle" class="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 hidden lg:block cursor-pointer">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </label>
-      </div>
-      
-      <div>
-        <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">分类导航</h3>
-        <div class="space-y-1">
-          <a href="?catalog=all" class="flex items-center px-3 py-2 rounded-lg {{CATALOG_EXISTS}} w-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-            </svg>
-            <span class="text-gray-700 dark:text-gray-200">全部</span>
-          </a>
-          {{CATALOG_LINKS}}
-        </div>
-      </div>
-      
-      <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800">
-        <div class="{{SUBMISSION_CLASS}}">
-          <button id="addSiteBtnSidebar" class="w-full flex items-center justify-center px-4 py-2 bg-accent-500 text-white rounded-lg hover:bg-accent-600 transition duration-300 mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-            </svg>
-            添加新书签
-          </button>
-        </div>
-        
-        
-        <a href="/admin" target="_blank" class="mt-2 flex items-center px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 transition duration-300">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-          </svg>
-          后台管理
-        </a>
-      </div>
-    </div>
-  </aside>
-  
-  <!-- 主内容区 -->
-  <main class="main-content {{MAIN_CLASS}} min-h-screen transition-all duration-300">
-    <header class="{{HEADER_CLASS}} text-white py-10 px-6 md:px-10 shadow-sm">
-      {{HEADER_CONTENT}}
-    </header>
-    
-    <div class="home-stats-row max-w-7xl mx-auto px-4 sm:px-6 {{STATS_ROW_PY_CLASS}}">
-      <div class="flex items-center justify-between {{STATS_ROW_HIDDEN}}">
-        <h2 class="text-xl font-semibold text-gray-800 {{STATS_VISIBLE}}" {{STATS_STYLE}} data-role="list-heading" data-default="{{HEADING_DEFAULT}}" data-active="{{HEADING_ACTIVE}}">
-          {{HEADING_TEXT}}
-        </h2>
-        <div id="hitokoto-parent" class="text-sm {{HITOKOTO_CLASS}} md:block {{HITOKOTO_VISIBLE}}" {{HITOKOTO_STYLE}}>
-          <div id="hitokoto"><a href="#" target="_blank" id="hitokoto_text" {{HITOKOTO_STYLE}}>{{HITOKOTO_CONTENT}}</a></div>
-        </div>
-      </div>
-    </div>
-    
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 pb-12">
-      <div class="{{CONTAINER_CLASS}} p-4 sm:p-6">
-        <div id="sitesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-          {{SITES_GRID}}
-        </div>
-      </div>
-    </section>
-    
-  </main>
-  
-  <button id="backToTop" class="fixed bottom-8 right-8 p-3 rounded-full bg-accent-500 text-white shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-accent-600">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11l7-7 7 7M5 19l7-7 7 7" />
-    </svg>
-  </button>
-  <button type="button" id="addSiteBtnFloating" class="{{SUBMISSION_CLASS}} fixed bottom-24 right-8 z-40 hidden min-[550px]:flex p-3 rounded-full bg-accent-500 text-white shadow-lg hover:bg-accent-600 transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2" title="公开投稿" aria-label="公开投稿">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14M5 12h14" />
-    </svg>
-  </button>
-  
-  <!-- 添加网站模态框 -->
+
+  <!-- 添加网站模态框（公开投稿） -->
   <div id="addSiteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 opacity-0 invisible transition-all duration-300">
     <div class="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 transform translate-y-8 transition-all duration-300">
       <div class="p-6">
         <div class="flex items-center justify-between mb-4">
           <h2 class="text-xl font-semibold text-gray-900">添加新书签</h2>
           <button id="closeModal" class="text-gray-400 hover:text-gray-500">
-            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
         </div>
-        
         <form id="addSiteForm" class="space-y-4">
           <div>
             <label for="addSiteName" class="block text-sm font-medium text-gray-700">名称</label>
             <input type="text" id="addSiteName" required class="mt-1 block w-full px-3 py-2 border border-primary-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary-400">
           </div>
-          
           <div>
             <label for="addSiteUrl" class="block text-sm font-medium text-gray-700">网址</label>
             <input type="text" id="addSiteUrl" required class="mt-1 block w-full px-3 py-2 border border-primary-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary-400">
           </div>
-          
           <div>
             <label for="addSiteLogo" class="block text-sm font-medium text-gray-700">Logo (可选)</label>
             <input type="text" id="addSiteLogo" class="mt-1 block w-full px-3 py-2 border border-primary-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary-400">
           </div>
-          
           <div>
             <label for="addSiteDesc" class="block text-sm font-medium text-gray-700">描述 (可选)</label>
             <textarea id="addSiteDesc" rows="2" class="mt-1 block w-full px-3 py-2 border border-primary-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary-400"></textarea>
           </div>
-          
           <div>
             <label for="addSiteCatelog" class="block text-sm font-medium text-gray-700">分类</label>
             <select id="addSiteCatelog" required class="mt-1 block w-full px-3 py-2 border border-primary-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary-400 bg-white">
               <option value="" disabled selected>加载中...</option>
             </select>
           </div>
-
           <div id="addSiteTurnstile" class="hidden justify-center" style="min-height: 65px;"></div>
-
           <div id="addSiteMessage" class="hidden rounded-lg border px-3 py-2 text-sm leading-relaxed"></div>
-          
           <div class="flex justify-end pt-4">
-            <button type="button" id="cancelAddSite" class="bg-white py-2 px-4 border border-primary-100 rounded-md shadow-sm text-sm font-medium text-primary-600 hover:bg-secondary-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-200 mr-3">
-              取消
-            </button>
-            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-accent-500 hover:bg-accent-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-400">
-              提交
-            </button>
+            <button type="button" id="cancelAddSite" class="bg-white py-2 px-4 border border-primary-100 rounded-md shadow-sm text-sm font-medium text-primary-600 hover:bg-secondary-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-200 mr-3">取消</button>
+            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-accent-500 hover:bg-accent-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-400">提交</button>
           </div>
         </form>
       </div>
@@ -217,9 +131,7 @@
         <div class="flex items-center justify-between mb-4">
           <h2 class="text-xl font-semibold text-gray-900">编辑书签</h2>
           <button id="homeEditCloseBtn" class="text-gray-400 hover:text-gray-500">
-            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
         </div>
         <form id="homeEditSiteForm" class="space-y-4">
@@ -251,8 +163,7 @@
             </div>
             <div>
               <label for="homeEditPrivate" class="flex items-center gap-2 mt-6 text-sm font-medium text-gray-700 cursor-pointer select-none">
-                <input type="checkbox" id="homeEditPrivate" class="h-4 w-4 rounded border-primary-300 text-accent-500 focus:ring-accent-400">
-                私密书签
+                <input type="checkbox" id="homeEditPrivate" class="h-4 w-4 rounded border-primary-300 text-accent-500 focus:ring-accent-400"> 私密书签
               </label>
             </div>
           </div>
@@ -266,7 +177,7 @@
     </div>
   </div>
 
-  <!-- 删除书签确认模态框（可视化编辑模式） -->
+  <!-- 删除书签确认模态框 -->
   <div id="homeDeleteSiteModal" class="fixed inset-0 z-[70] flex items-center justify-center bg-black bg-opacity-50 opacity-0 invisible transition-all duration-300">
     <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm mx-4 transform translate-y-8 transition-all duration-300 p-6">
       <h2 class="text-lg font-semibold text-gray-900 mb-2">删除书签</h2>
@@ -281,21 +192,17 @@
   <!-- 右键菜单（可视化编辑模式） -->
   <div id="homeContextMenu" class="fixed z-[80] hidden bg-white rounded-lg shadow-xl border border-gray-200 py-1 min-w-[150px] dark:bg-gray-800 dark:border-gray-700">
     <button type="button" data-action="edit" class="home-ctx-site hidden w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700 flex items-center gap-2">
-      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-      编辑书签
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>编辑书签
     </button>
     <button type="button" data-action="delete" class="home-ctx-site hidden w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/40 flex items-center gap-2">
-      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-      删除书签
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>删除书签
     </button>
     <div class="home-ctx-site hidden border-t border-gray-100 dark:border-gray-700 my-1"></div>
     <button type="button" data-action="edit-category" class="home-ctx-category hidden w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700 flex items-center gap-2">
-      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
-      编辑分类
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>编辑分类
     </button>
     <button type="button" data-action="delete-category" class="home-ctx-category hidden w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/40 flex items-center gap-2">
-      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-      删除分类
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>删除分类
     </button>
   </div>
 
@@ -310,7 +217,7 @@
     <button id="homeEditExitBtn" type="button" class="px-3 py-1.5 rounded-full text-xs font-medium bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700">退出</button>
   </div>
 
-  <!-- 编辑分类模态框（可视化编辑模式） -->
+  <!-- 编辑分类模态框 -->
   <div id="homeCategoryModal" class="fixed inset-0 z-[70] flex items-center justify-center bg-black bg-opacity-50 opacity-0 invisible transition-all duration-300">
     <div class="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 transform translate-y-8 transition-all duration-300 dark:bg-gray-800">
       <div class="p-6">
@@ -334,7 +241,7 @@
     </div>
   </div>
 
-  <!-- 分类排序模态框（可视化编辑模式） -->
+  <!-- 分类排序模态框 -->
   <div id="homeCategorySortModal" class="fixed inset-0 z-[70] flex items-center justify-center bg-black bg-opacity-50 opacity-0 invisible transition-all duration-300">
     <div class="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 transform translate-y-8 transition-all duration-300 dark:bg-gray-800">
       <div class="p-6">
@@ -355,12 +262,15 @@
     </div>
   </div>
 
+  <!-- 脚本：home-render.js 必须在其他 home-*.js 之前（先注入数据，再让它们初始化） -->
+  <script src="/js/home-card-model.js?v=1.0.0"></script>
+  <script src="/js/home-render.js?v=1.0.0"></script>
   <script src="/js/home-ui.js?v=f53dfb78"></script>
   <script src="/js/home-cards.js?v=b371cf86"></script>
   <script src="/js/home-submit.js?v=33600d3b"></script>
   <script src="/js/home-search.js?v=be6d04ab"></script>
   <script src="/js/home-category-nav.js?v=edf5fc51"></script>
   <script src="/js/home-edit.js?v=db9ba5cb"></script>
-  <script src="/js/main.js?v=09263376"></script>
+  <script src="/js/main.js?v=e37e1ce9"></script>
 </body>
 </html>
