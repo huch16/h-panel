@@ -1,0 +1,61 @@
+# OS
+.DS_Store
+Thumbs.db
+
+node_modules/
+.wrangler/
+wrangler.toml
+wrangler.worker-backup.toml
+_worker.js
+_worker.js.map
+
+# Build artifacts
+_worker.bundle
+dist-check/
+dist-functions/
+
+# Local backup files
+*.backup
+*.bak
+*.tmp
+*.orig
+
+# Husky internal files
+.husky/_
+
+# Debug / scratch endpoints — never commit
+functions/**/test.js
+functions/**/test-*.js
+functions/**/*-test.js
+functions/**/debug*.js
+functions/**/scratch*.js
+functions/**/test-dir/
+functions/**/_debug/
+
+# Design assets & screenshots — keep out of source tree
+/image/
+
+# One-off migration scripts — should be moved to scripts/archive/ instead
+scripts/bulk-*.sql
+scripts/verify-*.sql
+scripts/*-INSTRUCTIONS.md
+
+# Editor
+.vscode/
+.idea/
+.trae/
+.gemini/
+.cursor/
+.codex/
+.claude/
+.kiro/
+.agent/
+.roo/
+.shared/
+.windsurf/
+*.swp
+*.swo
+
+# Local wrangler dev outputs
+.wrangler/
+.dev/

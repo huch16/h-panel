@@ -1,0 +1,665 @@
+/* =========================================================================
+ * admin-settings-v2.css
+ * 重构后的精简设置面板样式 - 保留所有原字段 ID，向后兼容
+ * ========================================================================= */
+
+/* ================== 顶部工具栏 (搜索 + 预设) ================== */
+.settings-toolbar-v2 {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: linear-gradient(180deg, #fafbfc 0%, #ffffff 100%);
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: -1.5rem -1.5rem 1rem -1.5rem;
+}
+
+.settings-toolbar-v2 .toolbar-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.settings-toolbar-v2 .toolbar-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-right: 4px;
+  white-space: nowrap;
+}
+
+/* 预设按钮 */
+.preset-btn-group {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.preset-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #ffffff;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  color: #374151;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.preset-btn:hover {
+  border-color: #3b82f6;
+  background: #eff6ff;
+  color: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.preset-btn:active {
+  transform: translateY(0);
+}
+
+.preset-btn.active {
+  border-color: #3b82f6;
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  color: #1e3a8a;
+  font-weight: 600;
+}
+
+.preset-btn .preset-icon {
+  font-size: 1rem;
+}
+
+/* 搜索框 */
+.settings-search-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+}
+
+.settings-search-input {
+  width: 100%;
+  height: 36px;
+  padding: 8px 12px 8px 36px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  background: #ffffff;
+  transition: all 0.15s;
+  box-sizing: border-box;
+}
+
+.settings-search-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.settings-search-icon {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  font-size: 0.875rem;
+  pointer-events: none;
+}
+
+.settings-search-clear {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: none;
+}
+
+.settings-search-clear:hover {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.settings-search-wrap.has-value .settings-search-clear {
+  display: block;
+}
+
+.settings-search-result {
+  font-size: 0.75rem;
+  color: #6b7280;
+  padding: 0 4px;
+}
+
+.settings-search-result.no-match {
+  color: #dc2626;
+  font-weight: 500;
+}
+
+/* ================== 可折叠分组 ================== */
+.settings-section {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  background: #ffffff;
+  overflow: hidden;
+  transition: box-shadow 0.15s ease;
+}
+
+.settings-section:hover {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.settings-section > summary {
+  padding: 12px 16px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+  list-style: none;
+  background: #fafbfc;
+  transition: background 0.15s;
+}
+
+.settings-section > summary::-webkit-details-marker {
+  display: none;
+}
+
+.settings-section > summary::before {
+  content: '▸';
+  font-size: 0.7rem;
+  color: #9ca3af;
+  transition: transform 0.2s;
+  display: inline-block;
+  width: 12px;
+}
+
+.settings-section[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.settings-section[open] > summary {
+  background: #ffffff;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.settings-section > summary:hover {
+  background: #f3f4f6;
+}
+
+.settings-section[open] > summary:hover {
+  background: #f9fafb;
+}
+
+.settings-section-summary-icon {
+  font-size: 1.05rem;
+}
+
+.settings-section-summary-title {
+  flex: 1;
+}
+
+.settings-section-summary-meta {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-left: auto;
+  margin-right: 8px;
+}
+
+.settings-section-summary-tag {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 4px;
+}
+
+.settings-section-summary-tag.advanced {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.settings-section-summary-tag.recommended {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.settings-section-body {
+  padding: 8px 16px 16px;
+}
+
+/* ================== 紧凑设置项 (行内布局) ================== */
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px dashed #f3f4f6;
+}
+
+.settings-row:last-child {
+  border-bottom: none;
+}
+
+.settings-row-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.settings-row-label > i {
+  width: 16px;
+  text-align: center;
+  color: #6b7280;
+  flex-shrink: 0;
+}
+
+.settings-row-label-text {
+  font-size: 0.875rem;
+  color: #374151;
+  font-weight: 500;
+}
+
+.settings-row-label-hint {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin-left: 4px;
+}
+
+.settings-row-control {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ================== 紧凑控件 ================== */
+.compact-input,
+.compact-select {
+  height: 32px;
+  padding: 4px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  background: #ffffff;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  box-sizing: border-box;
+}
+
+.compact-input:focus,
+.compact-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+.compact-input.short {
+  width: 80px;
+}
+
+.compact-input.medium {
+  width: 140px;
+}
+
+.compact-select {
+  padding-right: 24px;
+  cursor: pointer;
+  min-width: 100px;
+}
+
+/* 紧凑颜色选择 */
+.compact-color-group {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  overflow: hidden;
+  height: 32px;
+}
+
+.compact-color-picker {
+  width: 28px;
+  height: 100%;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  background: transparent;
+}
+
+.compact-color-picker::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.compact-color-picker::-webkit-color-swatch {
+  border: none;
+  border-right: 1px solid #e5e7eb;
+}
+
+.compact-color-text {
+  width: 80px;
+  height: 100%;
+  border: none;
+  padding: 0 8px;
+  font-size: 0.75rem;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  background: #fff;
+}
+
+.compact-color-text:focus {
+  outline: none;
+  background: #f9fafb;
+}
+
+/* 紧凑开关 (scale down) */
+.compact-switch {
+  transform: scale(0.85);
+  transform-origin: right center;
+}
+
+/* 紧凑滑块 */
+.compact-range {
+  width: 140px;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: #e5e7eb;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.compact-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #3b82f6;
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.compact-range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #3b82f6;
+  cursor: pointer;
+  border: 2px solid #fff;
+}
+
+.compact-range-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.compact-range-value {
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  min-width: 36px;
+  text-align: right;
+}
+
+/* ================== 紧凑分段控件 (代替单选) ================== */
+.segment-control {
+  display: inline-flex;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #f9fafb;
+}
+
+.segment-control label {
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  color: #4b5563;
+  border-right: 1px solid #e5e7eb;
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.segment-control label:last-child {
+  border-right: none;
+}
+
+.segment-control input {
+  display: none;
+}
+
+.segment-control label:hover {
+  background: #f3f4f6;
+}
+
+.segment-control input:checked + span,
+.segment-control label:has(input:checked) {
+  background: #3b82f6;
+  color: white;
+  font-weight: 500;
+}
+
+/* 兼容旧版 radio 的 segment */
+.card-layout-option .card-segment-option {
+  /* 兼容旧样式 */
+}
+
+/* ================== 紧凑分组 ================== */
+.settings-compact-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.settings-compact-grid.cols-2 {
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+/* ================== 隐藏旧元素 ================== */
+.settings-v2-hide {
+  display: none !important;
+}
+
+/* 当搜索激活时，仅显示匹配项 */
+body.settings-searching .settings-row:not([data-search-match="1"]) {
+  display: none !important;
+}
+
+body.settings-searching .settings-section:not([data-section-match="1"]) {
+  display: none !important;
+}
+
+/* 搜索结果高亮 */
+.settings-row mark,
+.settings-row-label mark {
+  background: #fef08a;
+  padding: 0 2px;
+  border-radius: 2px;
+  color: inherit;
+  font-weight: 600;
+}
+
+/* ================== 提示横幅 ================== */
+.settings-tip-banner {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  border: 1px solid #93c5fd;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  font-size: 0.8125rem;
+  color: #1e40af;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.settings-tip-banner i {
+  color: #2563eb;
+}
+
+/* ================== 设备切换器 (桌面/移动) ================== */
+.settings-device-tabs {
+  display: inline-flex;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f9fafb;
+  padding: 2px;
+}
+
+.settings-device-tab {
+  padding: 6px 14px;
+  font-size: 0.8125rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #4b5563;
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+
+.settings-device-tab.active {
+  background: #ffffff;
+  color: #1e40af;
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* ================== 设置组分组容器 ================== */
+.settings-groups-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ================== 滑出动画 ================== */
+@keyframes settingsFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.settings-section {
+  animation: settingsFadeIn 0.2s ease;
+}
+
+/* ================== 响应式 ================== */
+@media (max-width: 768px) {
+  .settings-toolbar-v2 {
+    margin: -1rem -1rem 1rem -1rem;
+    padding: 10px 12px;
+  }
+
+  .preset-btn {
+    padding: 5px 10px;
+    font-size: 0.75rem;
+  }
+
+  .settings-section-body {
+    padding: 6px 12px 12px;
+  }
+
+  .compact-range {
+    width: 100px;
+  }
+
+  .compact-input.medium {
+    width: 110px;
+  }
+}
+
+/* ================== 紧凑卡片风格选择 ================== */
+.style-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.style-preview-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: #fff;
+}
+
+.style-preview-card:hover {
+  border-color: #3b82f6;
+}
+
+.style-preview-card.active {
+  border-color: #3b82f6;
+  background: #eff6ff;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+.style-preview-card-title {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-align: center;
+  color: #374151;
+  margin-top: 4px;
+}
+
+.style-preview-card.active .style-preview-card-title {
+  color: #1e40af;
+  font-weight: 600;
+}
+
+.style-preview-thumb {
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: #f9fafb;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+/* ================== 空状态 ================== */
+.settings-empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+.settings-empty-state i {
+  font-size: 2rem;
+  margin-bottom: 8px;
+  display: block;
+  color: #d1d5db;
+}
